@@ -7,7 +7,7 @@
 - 时间：ISO 8601 UTC，例如 "2025-11-13T12:00:00.000Z"
 - 坐标：x ∈ [0, grid_width-1], y ∈ [0, grid_height-1]
 - intensity ∈ [0.0, 1.0]（超出裁剪）
-- emotion 枚举：["happy","calm","tense","sad","excited"]（可扩展）
+- emotion 枚举：["happy","calm","tense","sad"]（可扩展）
 - 返回 JSON Content-Type: application/json
 
 ---
@@ -53,7 +53,7 @@ NoteEvent
 
 EmotionStyle
 {
-"emotion": "happy|calm|tense|sad|excited",
+"emotion": "happy|calm|tense|sad",
 "bpm": int,
 "step": int,
 "scale": "string",
