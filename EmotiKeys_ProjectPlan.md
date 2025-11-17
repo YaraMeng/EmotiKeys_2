@@ -15,9 +15,9 @@ To provide a simple and intuitive way for users to visually and musically expres
 | **ID** | **Item**                | **Description**                                        | **Priority** |
 | -------- | ------------------------- | -------------------------------------------------------- | -------------- |
 | PB01   | Basic project setup     | Set up webpage and Python backend structure            | P1           |
-| PB02   | Main UI & character     | Layout with character + 5 emotion options + grid       | P1           |
+| PB02   | Main UI & character     | Layout with character + 4 emotion options + grid       | P1           |
 | PB03   | 20×10 grid interaction | Detect mouse position on the grid                      | P1           |
-| PB04   | Emotion selection       | User can choose one of 5 emotions                      | P1           |
+| PB04   | Emotion selection       | User can choose one of 4 emotions                      | P1           |
 | PB05   | Emotion color styling   | Colors and visual style vary per emotion               | P1           |
 | PB06   | Drawing effects         | Mouse movement “paints” emotional colors on grid     | P2           |
 | PB07   | Character expressions   | Character face changes with emotion                    | P2           |
