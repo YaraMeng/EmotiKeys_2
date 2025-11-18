@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import moods
+from .routes import moods, generate_notes
 
 app = FastAPI(title="EmotiKeys Backend (dev)")
 
@@ -13,6 +13,7 @@ app.add_middleware(
 )
 
 app.include_router(moods.router)
+app.include_router(generate_notes.router)
 
 
 @app.get("/")
