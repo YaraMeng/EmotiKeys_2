@@ -8,7 +8,6 @@ MOODS = {
     "calm": {"bpm": 78, "step": 6, "scale": "G_pentatonic", "vel": [55, 75], "legato": 1.2, "palette": ["#B2DFDB", "#80CBC4"]},
     "tense": {"bpm": 140, "step": 1, "scale": "E_phrygian", "vel": [70, 95], "legato": 0.5, "palette": ["#FF5252", "#FF1744"]},
     "sad": {"bpm": 88, "step": 3, "scale": "A_aeolian", "vel": [50, 70], "legato": 0.95, "palette": ["#90A4AE", "#546E7A"]},
-    "excited": {"bpm": 145, "step": 2, "scale": "D_dorian", "vel": [85, 110], "legato": 0.8, "palette": ["#D05CE3", "#FF4081"]},
 }
 
 
