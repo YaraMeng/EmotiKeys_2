@@ -51,6 +51,10 @@ NoteEvent
 "source_cell": Cell
 }
 
+// 可选字段：当从 `POST /generate-notes` 返回时，后端可附带 `source_event_index`，
+// 表示该 note 对应请求中 `events` 数组的索引（0-based），便于前端把视觉事件与音符一一对应。
+// "source_event_index": int
+
 EmotionStyle
 {
 "emotion": "happy|calm|tense|sad",
@@ -178,12 +182,15 @@ Response 200
   ```json
   - Request
     {
+    // 支持两种模式：
+    // 1) 提交 events 数组：{"events": [...], "grid_width":20, "grid_height":10}
+    // 2) 仅提交 session_id：{"session_id":"..."} —— 后端将从会话记录读取事件并生成 notes
     "session_id":"...",
     "events":[ {"x":3,"y":7,"emotion":"calm","intensity":0.6,"timestamp":"..."}, ... ]
     }
   - Response 200
     {
-    "notes":[ { "at_time":"...","pitch":60,"velocity":64,"duration":0.5,"source_cell":{...} }, ... ],
+    "notes":[ { "at_time":"...","pitch":60,"velocity":64,"duration":0.5,"source_cell":{...}, "source_event_index":0 }, ... ],
     "tempo": 90,
     "scale":"C-major"
     }
@@ -192,6 +199,8 @@ Response 200
 9) GET /sessions/{session_id}/export
 
 - 描述：导出 session 为 JSON（包含 cells、events、emotion_styles snapshot）。
+
+- 注：此端点为后续迭代（Deferred）。计划采用异步导出任务模式：`POST /sessions/{id}/export` 触发导出并返回 `task_id`，随后通过 `GET /exports/{task_id}` 获取导出状态与下载链接。
 
   ```json
   Response 200 (application/json attachment)
