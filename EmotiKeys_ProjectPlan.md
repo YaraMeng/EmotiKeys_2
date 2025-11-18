@@ -26,7 +26,7 @@ To provide a simple and intuitive way for users to visually and musically expres
 | PB10   | Emotion–music rules    | Different tempo, rhythm, note length per emotion       | P1           |
 | PB11   | Position→pitch mapping | Grid position influences pitch or volume               | P2           |
 | PB12   | Clear & reset           | User can clear and restart drawing                     | P3           |
-| PB13   | Export function         | Export the artwork or save the data                    | P3           |
+| PB13   | Export function         | Export the artwork or save the data (deferred to later iteration) | Deferred (backlog) |
 
 ## 4. 3-Week Development Plan (Sprint Overview)
 
@@ -35,7 +35,7 @@ To provide a simple and intuitive way for users to visually and musically expres
 | ------------ | -------------- | ---------------------------------------------------------------------------------------------- |
 | Sprint 1   | 11/06–11/12 | Build the basic structure and main UI, enabling emotion selection and basic grid interaction |
 | Sprint 2   | 11/13–11/19 | Implement core emotion-based visuals and sounds to create expressive experience              |
-| Sprint 3   | 11/20–11/28 | Enhance interaction details and add export features to finalize the project                  |
+| Sprint 3   | 11/20–11/28 | Enhance interaction details; export features deferred to later iteration                  |
 
 ## 5. Sprint 1 Plan & Deliverable
 
@@ -87,8 +87,8 @@ Refine details, enhance interaction, and support exporting user creations.
 * PB08 Character micro-motion
 * PB11 Position → pitch mapping
 * PB12 Clear & reset
-* PB13 Export function
+* PB13 Export function (deferred — export/playback handled by frontend in current iteration; backend export API optional in later iterations)
 
 ### Deliverable (Release v1.0)
 
-A complete, polished version with smooth interaction, visual-sound expression, and export options.
+A complete, polished version with smooth interaction and visual-sound expression. Export/playback features are deferred to later iterations and are not required for v1.0.
