@@ -344,8 +344,9 @@ class EmotionCanvasApp {
     
     startDrag(e) {
         this.isDragging = true;
-        this.dragStartX = e.clientX;
-        this.dragStartY = e.clientY;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        this.dragStartX = p.x;
+        this.dragStartY = p.y;
         this.avatarOffsetX = 0;
         this.avatarOffsetY = 0;
         this.avatarContainer.classList.add('dragging');
@@ -356,9 +357,9 @@ class EmotionCanvasApp {
     
     drag(e) {
         if (!this.isDragging) return;
-        
-        const deltaX = e.clientX - this.dragStartX;
-        const deltaY = e.clientY - this.dragStartY;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        const deltaX = p.x - this.dragStartX;
+        const deltaY = p.y - this.dragStartY;
         
         // 计算距离中心的距离
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -521,10 +522,9 @@ class EmotionCanvasApp {
     
     handleMouseMove(e) {
         if (!this.isComposing) return;
-        
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        const x = p.x;
+        const y = p.y;
         
         const currentRegion = this.getCurrentRegion(x, y);
         if (currentRegion && currentRegion !== this.currentMood) {
@@ -734,6 +734,17 @@ class EmotionCanvasApp {
     resizeCanvas() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+    }
+
+    mapClientToDesign(clientX, clientY) {
+        const scale = window.__HK_SCALE || 1;
+        const appEl = document.querySelector('.hk-app');
+        if (appEl) {
+            const rect = appEl.getBoundingClientRect();
+            return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale };
+        }
+        const rect = this.canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
     }
     
     drawGrid() {

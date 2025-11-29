@@ -316,12 +316,22 @@ class EmotionCanvasApp {
         console.log('⏸️ 暂停谱曲');
     }
     
+    mapClientToDesign(clientX, clientY) {
+        const scale = window.__HK_SCALE || 1;
+        const appEl = document.querySelector('.hk-app');
+        if (appEl) {
+            const rect = appEl.getBoundingClientRect();
+            return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale };
+        }
+        const rect = this.canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
     handleMouseMove(e) {
         if (!this.isComposing || !this.currentMood) return;
-        
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        const x = p.x;
+        const y = p.y;
         
         const cellX = Math.floor(x / (this.canvas.width / this.gridWidth));
         const cellY = Math.floor(y / (this.canvas.height / this.gridHeight));

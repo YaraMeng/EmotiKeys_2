@@ -271,10 +271,9 @@ class EmotionCanvasApp {
     
     handleMouseMove(e) {
         if (!this.isComposing) return;
-        
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        const x = p.x;
+        const y = p.y;
         
         // 检测当前区域
         const currentRegion = this.getCurrentRegion(x, y);
@@ -577,6 +576,17 @@ class EmotionCanvasApp {
     resizeCanvas() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+    }
+
+    mapClientToDesign(clientX, clientY) {
+        const scale = window.__HK_SCALE || 1;
+        const appEl = document.querySelector('.hk-app');
+        if (appEl) {
+            const rect = appEl.getBoundingClientRect();
+            return { x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale };
+        }
+        const rect = this.canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
     }
     
     drawGrid() {
