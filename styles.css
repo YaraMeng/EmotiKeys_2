@@ -10,26 +10,18 @@ body {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: white;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .container {
     position: relative;
-    width: 1440px;
-    height: 720px;
-    margin: 20px auto;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    width: 100vw;
+    height: 100vh;
 }
 
 /* 情绪区域指示器 */
 .mood-region-indicator {
-    position: absolute;
+    position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
@@ -132,22 +124,19 @@ body {
 }
 
 /* 情绪特定样式 */
-.avatar-container.happy .avatar {
+.avatar-container.happy .avatar { 
     filter: hue-rotate(0deg) contrast(1.2) saturate(1.3) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #FFD54F;
 }
-
-.avatar-container.calm .avatar {
+.avatar-container.calm .avatar { 
     filter: hue-rotate(180deg) brightness(1.1) saturate(1.1) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #4FC3F7;
 }
-
-.avatar-container.tense .avatar {
+.avatar-container.tense .avatar { 
     filter: hue-rotate(300deg) contrast(1.3) saturate(1.4) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #F44336;
 }
-
-.avatar-container.sad .avatar {
+.avatar-container.sad .avatar { 
     filter: hue-rotate(220deg) brightness(0.9) saturate(0.8) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #5C6BC0;
 }
@@ -162,30 +151,25 @@ body {
     100% { transform: rotate(1deg) scale(0.98); }
 }
 
-/* 画布容器 */
-.canvas-container {
-    position: absolute;
+/* 网格画布 - 全屏无边框 */
+#gridCanvas {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-/* 网格画布 - 固定尺寸 */
-#gridCanvas {
+    width: 100vw;
+    height: 100vh;
     display: block;
     cursor: crosshair;
-    background: rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
 /* 对角线边界 */
 .diagonal-boundaries {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: 50;
 }
@@ -242,7 +226,7 @@ body {
 
 /* 控件 */
 .controls {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
@@ -294,7 +278,7 @@ body {
 
 /* 状态显示 */
 .status {
-    position: absolute;
+    position: fixed;
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
@@ -342,26 +326,49 @@ body {
 }
 
 /* 响应式设计 */
-@media (max-width: 1480px) {
-    body {
-        padding: 10px;
+@media (max-width: 768px) {
+    .mood-region-indicator {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
     }
     
-    .container {
-        transform: scale(0.9);
-        transform-origin: center;
+    .region-label {
+        padding: 6px 12px;
+        font-size: 10px;
     }
-}
-
-@media (max-width: 1320px) {
-    .container {
-        transform: scale(0.8);
+    
+    .avatar {
+        width: 80px;
+        height: 80px;
     }
-}
-
-@media (max-width: 1160px) {
-    .container {
-        transform: scale(0.7);
+    
+    .avatar-container::before {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .controls {
+        bottom: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .control-btn {
+        padding: 10px 20px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+    
+    .status {
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 20px;
+        bottom: 70px;
+    }
+    
+    .status span {
+        font-size: 12px;
     }
 }
 

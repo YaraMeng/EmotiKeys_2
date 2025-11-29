@@ -17,31 +17,28 @@
             <div class="region-label tense-region">😰 紧张区域</div>
             <div class="region-label sad-region">😔 伤心区域</div>
         </div>
-
+        
         <!-- 中央头像 - 弹性拉动 -->
         <div class="avatar-container">
-            <img id="avatar"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iNjAiIGZpbGw9IiM0RUE5RjEiLz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI0MCIgcj0iMTUiIGZpbGw9IiNGRkYiLz4KPHBhdGggZD0iTTQ1IDgwIEEyMCAyMCA0IDAgMCA3NSA4MCIgc3Ryb2tlPSIjRkZGIiBzdHJva2Utd2lkdGg9IjQiLz4KPC9zdmc+"
+            <img id="avatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iNjAiIGZpbGw9IiM0RUE5RjEiLz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI0MCIgcj0iMTUiIGZpbGw9IiNGRkYiLz4KPHBhdGggZD0iTTQ1IDgwIEEyMCAyMCA0IDAgMCA3NSA4MCIgc3Ryb2tlPSIjRkZGIiBzdHJva2Utd2lkdGg9IjQiLz4KPC9zdmc+" 
                  alt="头像" class="avatar">
         </div>
-
-        <!-- 网格画布 - 固定尺寸 -->
-        <div class="canvas-container">
-            <canvas id="gridCanvas" width="1440" height="720"></canvas>
-        </div>
-
+        
+        <!-- 网格画布 - 全屏 -->
+        <canvas id="gridCanvas"></canvas>
+        
         <!-- 对角线边界（可视化） -->
         <div class="diagonal-boundaries">
             <div class="diagonal-boundary diagonal-1"></div>
             <div class="diagonal-boundary diagonal-2"></div>
         </div>
-
+        
         <!-- 控件 -->
         <div class="controls">
             <button id="playPauseBtn" class="control-btn">开始探索</button>
             <button id="saveBtn" class="control-btn" disabled>保存音频</button>
         </div>
-
+        
         <!-- 状态显示 -->
         <div class="status">
             <span id="currentMood">当前情绪: 等待探索</span>
@@ -49,11 +46,11 @@
             <span id="composingStatus">状态: 待开始</span>
             <span id="recordingStatus">录音: 未开始</span>
         </div>
-
+        
         <!-- 隐藏的音频播放器 -->
         <audio id="audioPlayer" controls style="display: none;"></audio>
     </div>
-
+    
     <script src="app.js"></script>
 </body>
 </html>
