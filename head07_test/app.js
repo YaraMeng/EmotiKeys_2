@@ -217,17 +217,17 @@ class EmotionCanvasApp {
     
     async initBackend() {
         try {
-            const moodsResponse = await fetch('/moods');
+            const moodsResponse = await apiFetch('/moods');
             this.moodConfig = await moodsResponse.json();
             console.log('情绪配置:', this.moodConfig);
             
             for (const mood in this.moodConfig) {
                 const scaleName = this.moodConfig[mood].scale;
-                const scaleResponse = await fetch(`/scale?name=${scaleName}`);
+                const scaleResponse = await apiFetch(`/scale?name=${scaleName}`);
                 this.scales[mood] = await scaleResponse.json();
             }
             
-            const sessionResponse = await fetch('/sessions', {
+            const sessionResponse = await apiFetch('/sessions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -682,7 +682,7 @@ class EmotionCanvasApp {
                 timestamp: new Date().toISOString()
             };
             
-            await fetch(`/sessions/${this.sessionId}/cells`, {
+            await apiFetch(`/sessions/${this.sessionId}/cells`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cellData)

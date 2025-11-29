@@ -1,4 +1,12 @@
 // 前端应用主逻辑 - 弹性头像，屏幕声音录制
+
+// API 基础地址（将其替换为运行后端的机器地址）
+const API_BASE = 'http://192.168.124.7:8000';
+
+// 统一的 fetch 封装，确保请求始终发向后端的 API
+function apiFetch(path, options = {}) {
+    return fetch(`${API_BASE}${path}`, options);
+}
 class EmotionCanvasApp {
     constructor() {
         this.canvas = document.getElementById('gridCanvas');
@@ -213,17 +221,17 @@ class EmotionCanvasApp {
     
     async initBackend() {
         try {
-            const moodsResponse = await fetch('/moods');
+            const moodsResponse = await apiFetch('/moods');
             this.moodConfig = await moodsResponse.json();
             console.log('情绪配置:', this.moodConfig);
-            
+
             for (const mood in this.moodConfig) {
                 const scaleName = this.moodConfig[mood].scale;
-                const scaleResponse = await fetch(`/scale?name=${scaleName}`);
+                const scaleResponse = await apiFetch(`/scale?name=${scaleName}`);
                 this.scales[mood] = await scaleResponse.json();
             }
-            
-            const sessionResponse = await fetch('/sessions', {
+
+            const sessionResponse = await apiFetch('/sessions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -233,7 +241,7 @@ class EmotionCanvasApp {
             });
             const sessionData = await sessionResponse.json();
             this.sessionId = sessionData.session_id;
-            
+
         } catch (error) {
             console.error('初始化后端失败，使用降级配置:', error);
             this.useFallbackConfig();
@@ -672,7 +680,7 @@ class EmotionCanvasApp {
                 timestamp: new Date().toISOString()
             };
             
-            await fetch(`/sessions/${this.sessionId}/cells`, {
+            await apiFetch(`/sessions/${this.sessionId}/cells`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cellData)
