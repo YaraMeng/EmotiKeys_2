@@ -70,20 +70,20 @@ class EmotionCanvasApp {
     async initBackend() {
         try {
             // 1. 获取情绪配置
-            const moodsResponse = await fetch('/moods');
+            const moodsResponse = await apiFetch('/moods');
             this.moodConfig = await moodsResponse.json();
             console.log('情绪配置:', this.moodConfig);
             
             // 2. 获取音阶
             for (const mood in this.moodConfig) {
                 const scaleName = this.moodConfig[mood].scale;
-                const scaleResponse = await fetch(`/scale?name=${scaleName}`);
+                const scaleResponse = await apiFetch(`/scale?name=${scaleName}`);
                 this.scales[mood] = await scaleResponse.json();
             }
             console.log('音阶配置:', this.scales);
             
             // 3. 创建会话
-            const sessionResponse = await fetch('/sessions', {
+            const sessionResponse = await apiFetch('/sessions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -562,7 +562,7 @@ class EmotionCanvasApp {
                 timestamp: new Date().toISOString()
             };
             
-            const response = await fetch(`/sessions/${this.sessionId}/cells`, {
+            const response = await apiFetch(`/sessions/${this.sessionId}/cells`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cellData)
@@ -697,7 +697,7 @@ class EmotionCanvasApp {
         // 发送清空请求到后端（如果连接）
         if (this.sessionId) {
             try {
-                await fetch(`/sessions/${this.sessionId}/clear`, {
+                await apiFetch(`/sessions/${this.sessionId}/clear`, {
                     method: 'POST'
                 });
             } catch (error) {
