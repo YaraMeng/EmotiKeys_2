@@ -170,13 +170,14 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
+    background: url('./assets/bg-grid.png') center center / cover no-repeat;
 }
 
 /* 网格画布 - 固定尺寸 */
 #gridCanvas {
     display: block;
     cursor: crosshair;
-    background: rgba(0, 0, 0, 0.2);
+    background: transparent;
 }
 
 /* 对角线边界 */
@@ -188,6 +189,7 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: 50;
+    display: none;
 }
 
 .diagonal-boundary {
@@ -374,3 +376,4 @@ body {
 .container {
     animation: fadeIn 0.8s ease;
 }
+
