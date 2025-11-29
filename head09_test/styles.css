@@ -18,8 +18,8 @@ body {
 
 .container {
     position: relative;
-    width: 1440px;
-    height: 720px;
+    width: 1584px;
+    height: 864px;
     margin: 20px auto;
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
@@ -28,57 +28,72 @@ body {
 }
 
 /* 情绪区域指示器 */
+/* 情绪区域指示条 */
 .mood-region-indicator {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
+    inset: 0;
+    pointer-events: none;
     z-index: 100;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 10px 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .region-label {
-    padding: 8px 16px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
-    opacity: 0.7;
-    transition: all 0.3s ease;
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    opacity: 1;
+    transition: top 0.25s ease, left 0.25s ease, opacity 0.2s ease;
+    pointer-events: none;
+    transform: translateZ(0);
 }
 
 .region-label.active {
     opacity: 1;
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    animation: popIn 0.22s ease-out;
 }
 
 .happy-region {
-    background: linear-gradient(135deg, rgba(255,213,79,0.3), rgba(255,138,101,0.3));
-    border: 1px solid #FFD54F;
+    left: 704px;
+    top: 188px;
+}
+.happy-region.active {
+    left: 643px;
+    top: 169px;
 }
 
 .calm-region {
-    background: linear-gradient(135deg, rgba(79,195,247,0.3), rgba(41,182,246,0.3));
-    border: 1px solid #4FC3F7;
+    left: 297px;
+    top: 398px;
+}
+.calm-region.active {
+    left: 229px;
+    top: 362px;
 }
 
 .tense-region {
-    background: linear-gradient(135deg, rgba(244,67,54,0.3), rgba(211,47,47,0.3));
-    border: 1px solid #F44336;
+    left: 1144px;
+    top: 380px;
+}
+.tense-region.active {
+    left: 1199px;
+    top: 360px;
 }
 
 .sad-region {
-    background: linear-gradient(135deg, rgba(92,107,192,0.3), rgba(63,81,181,0.3));
-    border: 1px solid #5C6BC0;
+    left: 715px;
+    top: 558px;
+}
+.sad-region.active {
+    left: 649px;
+    top: 541px;
 }
 
-/* 头像容器 - 弹性拉动 */
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1.02); opacity: 1; }
+}
 .avatar-container {
     position: absolute;
     top: 50%;
@@ -170,7 +185,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background: url('./assets/bg-grid.png') center center / cover no-repeat;
+    background: url('./assets/background_max.png') center center / cover no-repeat;
 }
 
 /* 网格画布 - 固定尺寸 */
@@ -223,90 +238,131 @@ body {
 }
 
 .grid-highlight.happy {
-    background: radial-gradient(circle, rgba(255,213,79,0.8) 0%, rgba(255,213,79,0) 70%);
-    box-shadow: 0 0 20px rgba(255,213,79,0.5);
+    background: none;
+    overflow: hidden;
 }
 
-.grid-highlight.calm {
-    background: radial-gradient(circle, rgba(79,195,247,0.8) 0%, rgba(79,195,247,0) 70%);
-    box-shadow: 0 0 20px rgba(79,195,247,0.5);
+.grid-highlight.happy img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
 }
 
-.grid-highlight.tense {
-    background: radial-gradient(circle, rgba(244,67,54,0.8) 0%, rgba(244,67,54,0) 70%);
-    box-shadow: 0 0 20px rgba(244,67,54,0.5);
+.grid-highlight.happy .happy-base {
+    opacity: 1;
+    transition: opacity 1.5s ease-out;
 }
 
+.grid-highlight.happy .happy-overlay {
+    opacity: 1;
+    transform-origin: center;
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAD0lEQVR4nGP8z/D/PwMDAwMjAQAJoAJnKobaNwAAAABJRU5ErkJggg==');
+    mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAD0lEQVR4nGP8z/D/PwMDAwMjAQAJoAJnKobaNwAAAABJRU5ErkJggg==');
+    -webkit-mask-repeat: no-repeat, repeat;
+    mask-repeat: no-repeat, repeat;
+    -webkit-mask-size: 140% 140%, 24px 24px;
+    mask-size: 140% 140%, 24px 24px;
+    -webkit-mask-position: center, center;
+    mask-position: center, center;
+}
+
+.grid-highlight.happy .happy-overlay.dissolve {
+    animation: happyOverlayDissolve 0.8s ease-out forwards;
+    animation-delay: 0.7s;
+}
+
+.grid-highlight.happy .happy-overlay,
+.grid-highlight.happy .happy-base {
+    mix-blend-mode: normal;
+}
+
+@keyframes happyOverlayDissolve {
+    0% { transform: scale(1); opacity: 1; }
+    60% { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(0.4); opacity: 0; }
+}
+.grid-highlight.happy,
+.grid-highlight.calm,
+.grid-highlight.tense,
 .grid-highlight.sad {
-    background: radial-gradient(circle, rgba(92,107,192,0.8) 0%, rgba(92,107,192,0) 70%);
-    box-shadow: 0 0 20px rgba(92,107,192,0.5);
+    background: none;
+    box-shadow: none;
 }
 
 /* 控件 */
 .controls {
     position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 15px;
+    inset: 0;
+    pointer-events: none;
     z-index: 100;
 }
 
 .control-btn {
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    color: white;
+    position: absolute;
+    width: 144px;
+    height: 48px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: transparent;
     cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    font-weight: bold;
-    min-width: 120px;
-    font-size: 14px;
+    transition: transform 0.2s ease;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: auto;
+}
+
+#playPauseBtn {
+    left: 632px;
+    top: 713px;
+    bottom: auto;
+    background-image: url('./assets/start.png');
+}
+
+#playPauseBtn.playing {
+    background-image: url('./assets/pause.png');
+}
+
+#saveBtn {
+    left: 820px;
+    top: 713px;
+    bottom: auto;
+    background-image: url('./assets/save.png');
 }
 
 .control-btn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .control-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px);
 }
 
 .control-btn:disabled {
-    opacity: 0.5;
+    opacity: 0.25;
     cursor: not-allowed;
-}
-
-.control-btn.playing {
-    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-    border-color: rgba(255, 255, 255, 0.6);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+    filter: grayscale(0.4);
 }
 
 /* 状态显示 */
 .status {
     position: absolute;
-    bottom: 80px;
+    top: 35px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0.6);
+    transform-origin: center center;
     display: flex;
     gap: 30px;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 12px 24px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    border: none;
     z-index: 100;
 }
 
