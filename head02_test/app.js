@@ -339,10 +339,9 @@ class EmotionCanvasApp {
     
     draw(e) {
         if (!this.isDrawing || !this.currentMood || !this.isComposing) return;
-        
-        const rect = this.canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const p = this.mapClientToDesign(e.clientX, e.clientY);
+        const x = p.x;
+        const y = p.y;
         
         const cellX = Math.floor(x / (this.canvas.width / this.gridWidth));
         const cellY = Math.floor(y / (this.canvas.height / this.gridHeight));

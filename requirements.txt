@@ -1,5 +1,6 @@
-fastapi==0.100.1
-uvicorn[standard]==0.22.0
-httpx==0.24.1
-pytest==7.4.2
-pytest-asyncio==0.22.0
+# 前端生成器依赖
+# 注意：这些是生成前端文件所需的Python依赖
+# 实际前端运行在浏览器中，不需要Python环境
+        
+# 生成脚本依赖
+python>=3.8
