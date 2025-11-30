@@ -100,46 +100,34 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 90;
-    cursor: grab;
     transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
 }
 
-.avatar-container.dragging {
-    cursor: grabbing;
-    transition: none;
-}
-
 .avatar {
-    width: 100px;
-    height: 100px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.8);
+    border: none;
     transition: all 0.3s ease;
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     pointer-events: none;
+    transform-origin: center 90%;
+    animation: idleWobble 0.5s ease-in-out infinite alternate;
 }
 
-.avatar-container.dragging .avatar {
-    border-color: rgba(255, 255, 255, 1);
-    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
-    transform: scale(1.05);
+.avatar-container:hover .avatar {
+    animation: hoverBob 0.9s ease-out 2;
+}
+
+/* 默认头像悬停抖动（非情绪态时覆盖） */
+.avatar-container:not(.happy):not(.calm):not(.tense):not(.sad):hover .avatar {
+    animation: baseHoverShake 0.1s ease-in-out infinite alternate;
 }
 
 /* 弹性拉动范围指示 */
 .avatar-container::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    border: 2px dashed rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    content: none;
 }
 
 .avatar-container.dragging::before {
@@ -150,31 +138,65 @@ body {
 .avatar-container.happy .avatar {
     filter: hue-rotate(0deg) contrast(1.2) saturate(1.3) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #FFD54F;
+    transform-origin: center 90%;
+    animation: happyWobble 0.5s ease-in-out infinite alternate;
 }
 
 .avatar-container.calm .avatar {
     filter: hue-rotate(180deg) brightness(1.1) saturate(1.1) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #4FC3F7;
+    animation: calmSway 0.8s ease-in-out infinite alternate;
 }
 
 .avatar-container.tense .avatar {
     filter: hue-rotate(300deg) contrast(1.3) saturate(1.4) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #F44336;
+    animation: tenseShakeFast 0.25s ease-in-out infinite alternate;
 }
 
 .avatar-container.sad .avatar {
     filter: hue-rotate(220deg) brightness(0.9) saturate(0.8) drop-shadow(0 8px 16px rgba(0,0,0,0.4));
     border-color: #5C6BC0;
+    animation: sadRock 0.5s ease-in-out infinite alternate;
 }
 
-/* 紧张情绪的抖动动画 */
-.avatar-container.tense .avatar {
-    animation: tenseShake 0.5s ease-in-out infinite alternate;
+@keyframes happyWobble {
+    0% { transform: rotate(-4deg) scale(1); }
+    100% { transform: rotate(4deg) scale(1); }
 }
 
-@keyframes tenseShake {
-    0% { transform: rotate(-1deg) scale(1.02); }
-    100% { transform: rotate(1deg) scale(0.98); }
+@keyframes calmSway {
+    0% { transform: rotate(-1deg) scale(1.01); }
+    100% { transform: rotate(1deg) scale(0.99); }
+}
+
+@keyframes idleWobble {
+    0% { transform: rotate(-2deg) scale(1.02); }
+    100% { transform: rotate(2deg) scale(0.98); }
+}
+
+@keyframes tenseShakeFast {
+    0% { transform: rotate(-3deg) scale(1.03); }
+    100% { transform: rotate(3deg) scale(0.97); }
+}
+
+@keyframes sadRock {
+    0% { transform: rotate(-2deg) scale(1.02); }
+    100% { transform: rotate(2deg) scale(0.98); }
+}
+
+@keyframes hoverBob {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-8px); }
+    60% { transform: translateY(4px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes baseHoverShake {
+    0% { transform: rotate(-4deg) translate(-2px, -1px); }
+    25% { transform: rotate(3deg) translate(2px, -2px); }
+    75% { transform: rotate(-3deg) translate(1px, 2px); }
+    100% { transform: rotate(4deg) translate(-2px, 1px); }
 }
 
 /* 画布容器 */
@@ -228,21 +250,18 @@ body {
     transform-origin: center;
 }
 
-/* 网格高亮效果 */
+/* Grid highlight double-image dissolve */
 .grid-highlight {
     position: absolute;
     pointer-events: none;
     z-index: 2;
-    border-radius: 4px;
-    transition: opacity 1.5s ease-out;
-}
-
-.grid-highlight.happy {
     background: none;
+    box-shadow: none;
     overflow: hidden;
+    border-radius: 4px;
 }
 
-.grid-highlight.happy img {
+.grid-highlight img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -251,12 +270,16 @@ body {
     pointer-events: none;
 }
 
-.grid-highlight.happy .happy-base {
+.grid-highlight .base-layer {
     opacity: 1;
     transition: opacity 1.5s ease-out;
 }
 
-.grid-highlight.happy .happy-overlay {
+.grid-highlight .base-layer.fade {
+    opacity: 0;
+}
+
+.grid-highlight .overlay-layer {
     opacity: 1;
     transform-origin: center;
     -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAD0lEQVR4nGP8z/D/PwMDAwMjAQAJoAJnKobaNwAAAABJRU5ErkJggg==');
@@ -269,27 +292,14 @@ body {
     mask-position: center, center;
 }
 
-.grid-highlight.happy .happy-overlay.dissolve {
-    animation: happyOverlayDissolve 0.8s ease-out forwards;
-    animation-delay: 0.7s;
+.grid-highlight .overlay-layer.dissolve {
+    animation: overlayDissolve 0.8s ease-out forwards;
 }
 
-.grid-highlight.happy .happy-overlay,
-.grid-highlight.happy .happy-base {
-    mix-blend-mode: normal;
-}
-
-@keyframes happyOverlayDissolve {
+@keyframes overlayDissolve {
     0% { transform: scale(1); opacity: 1; }
     60% { transform: scale(0.8); opacity: 0.8; }
     100% { transform: scale(0.4); opacity: 0; }
-}
-.grid-highlight.happy,
-.grid-highlight.calm,
-.grid-highlight.tense,
-.grid-highlight.sad {
-    background: none;
-    box-shadow: none;
 }
 
 /* 控件 */
