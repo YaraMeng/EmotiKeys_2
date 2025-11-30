@@ -1,6 +1,7 @@
 // 前端应用主逻辑 - 对角线四分区版
 // 后端地址配置 - 将请求发送到远端后端
-const API_BASE = 'http://192.168.124.7:8000'; // <-- 替换为你的后端地址
+// HERE IS TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+const API_BASE = 'http://192.168.124.17:8000'; // <-- 替换为你的后端地址
 function apiFetch(path, options = {}) {
     return fetch(`${API_BASE}${path}`, options);
 }
@@ -523,8 +524,6 @@ class EmotionCanvasApp {
     }
 
     handleMouseMove(e) {
-        if (!this.isComposing) return;
-
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -538,9 +537,15 @@ class EmotionCanvasApp {
         const cellY = Math.floor(y / this.cellSize);
 
         if (cellX >= 0 && cellX < this.gridWidth && cellY >= 0 && cellY < this.gridHeight && this.currentMood) {
+            // 预览模式：总是显示高亮和播放声音
             this.createHighlight(cellX, cellY);
             this.triggerNote(cellX, cellY);
-            this.sendCellToBackend(cellX, cellY);
+
+            // 暂时先不需要发送数据到后端，等后续迭代
+            // 探索模式：仅在 isComposing 为 true 时发送数据
+            if (this.isComposing) {
+                this.sendCellToBackend(cellX, cellY);
+            }
         }
     }
 
@@ -581,7 +586,8 @@ class EmotionCanvasApp {
     }
 
     async triggerNote(x, y) {
-        if (!this.moodConfig[this.currentMood] || !this.isComposing) return;
+        // 允许在预览模式中播放（不依赖于 isComposing）
+        if (!this.moodConfig[this.currentMood]) return;
 
         const cfg = this.moodConfig[this.currentMood];
         const scale = this.scales[this.currentMood];
