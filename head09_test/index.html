@@ -10,12 +10,12 @@
 </head>
 <body>
     <div class="container">
-        <!-- 情绪区域指示器 -->
+        <!-- mood region indicator -->
         <div class="mood-region-indicator">
-            <div class="region-label happy-region">😊 开心区域</div>
-            <div class="region-label calm-region">😌 平和区域</div>
-            <div class="region-label tense-region">😰 紧张区域</div>
-            <div class="region-label sad-region">😔 伤心区域</div>
+            <img class="region-label happy-region" src="./assets/happy_text.png" data-src-default="./assets/happy_text.png" data-src-active="./assets/happy_text_ex.png" alt="Happy region">
+            <img class="region-label calm-region" src="./assets/clam_text.png" data-src-default="./assets/clam_text.png" data-src-active="./assets/clam_text_ex.png" alt="Calm region">
+            <img class="region-label tense-region" src="./assets/tense_text.png" data-src-default="./assets/tense_text.png" data-src-active="./assets/tense_text_ex.png" alt="Tense region">
+            <img class="region-label sad-region" src="./assets/sad_text.png" data-src-default="./assets/sad_text.png" data-src-active="./assets/sad_text_ex.png" alt="Sad region">
         </div>
 
         <!-- 中央头像 - 弹性拉动 -->
@@ -27,7 +27,7 @@
 
         <!-- 网格画布 - 固定尺寸 -->
         <div class="canvas-container">
-            <canvas id="gridCanvas" width="1440" height="720"></canvas>
+            <canvas id="gridCanvas" width="1584" height="864"></canvas>
         </div>
 
         <!-- 对角线边界（可视化） -->
@@ -38,16 +38,16 @@
 
         <!-- 控件 -->
         <div class="controls">
-            <button id="playPauseBtn" class="control-btn">开始探索</button>
-            <button id="saveBtn" class="control-btn" disabled>保存音频</button>
+            <button id="playPauseBtn" class="control-btn"></button>
+            <button id="saveBtn" class="control-btn" disabled></button>
         </div>
 
         <!-- 状态显示 -->
         <div class="status">
-            <span id="currentMood">当前情绪: 等待探索</span>
-            <span id="stepCounter">音符: 0</span>
-            <span id="composingStatus">状态: 待开始</span>
-            <span id="recordingStatus">录音: 未开始</span>
+            <span id="currentMood">Current mood: Awaiting exploration</span>
+            <span id="stepCounter">Notes: 0</span>
+            <span id="composingStatus">Status: Not started</span>
+            <span id="recordingStatus">Recording: Not started</span>
         </div>
 
         <!-- 隐藏的音频播放器 -->
@@ -57,3 +57,11 @@
     <script src="app.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+

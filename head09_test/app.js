@@ -39,21 +39,17 @@ class EmotionCanvasApp {
         this.avatarOffsetY = 0;
         this.maxPullDistance = 100; // 最大拉动距离
 
-        // 固定网格参数 (1440/72=20, 720/72=10)
-        this.gridWidth = 20;
-        this.gridHeight = 10;
+        // edefzdc0 (1584/72=22, 864/72=12)
+        this.gridWidth = 22;
+        this.gridHeight = 12;
         this.cellSize = 72;
 
         // 对角线四分区定义
         this.regions = {
-            // 右上区域：开心
             happy: (x, y) => x + y < 1 && x > y,
-            // 右下区域：平和
-            calm: (x, y) => x + y > 1 && x > y,
-            // 左下区域：紧张
-            tense: (x, y) => x + y > 1 && x < y,
-            // 左上区域：伤心
-            sad: (x, y) => x + y < 1 && x < y
+            calm: (x, y) => x + y < 1 && x < y,
+            tense: (x, y) => x + y > 1 && x > y,
+            sad: (x, y) => x + y > 1 && x < y
         };
 
         // 初始化音频
@@ -419,12 +415,20 @@ class EmotionCanvasApp {
 
     updateRegionIndicator(mood) {
         document.querySelectorAll('.region-label').forEach(label => {
+            const baseSrc = label.getAttribute('data-src-default');
+            if (baseSrc) {
+                label.src = baseSrc;
+            }
             label.classList.remove('active');
         });
 
         if (mood) {
             const activeLabel = document.querySelector(`.${mood}-region`);
             if (activeLabel) {
+                const hoverSrc = activeLabel.getAttribute('data-src-active');
+                if (hoverSrc) {
+                    activeLabel.src = hoverSrc;
+                }
                 activeLabel.classList.add('active');
             }
         }
@@ -434,7 +438,7 @@ class EmotionCanvasApp {
         if (this.currentMood === mood) return;
 
         this.currentMood = mood;
-        this.currentMoodDisplay.textContent = `当前情绪: ${this.getMoodText(mood)}`;
+        this.currentMoodDisplay.textContent = 'Current mood: Awaiting exploration';
         
         // 更新头像容器样式
         this.avatarContainer.className = 'avatar-container ' + mood;
@@ -445,10 +449,10 @@ class EmotionCanvasApp {
 
     getMoodText(mood) {
         const texts = {
-            happy: '开心',
-            calm: '平和', 
-            tense: '紧张',
-            sad: '伤心'
+            happy: 'Happy',
+            calm: 'Calm', 
+            tense: 'Tense',
+            sad: 'Sad'
         };
         return texts[mood] || mood;
     }
@@ -475,9 +479,9 @@ class EmotionCanvasApp {
         // 自动开始录音
         this.startRecording();
         
-        this.playPauseBtn.textContent = '停止探索';
+        this.playPauseBtn.textContent = '';
         this.playPauseBtn.classList.add('playing');
-        this.composingStatusDisplay.textContent = '状态: 探索中';
+        this.composingStatusDisplay.textContent = 'Status: Exploring';
 
         console.log('🎵 开始探索 + 自动录音');
     }
@@ -489,11 +493,11 @@ class EmotionCanvasApp {
         // 自动停止录音
         this.stopRecording();
         
-        this.playPauseBtn.textContent = '开始探索';
+        this.playPauseBtn.textContent = '';
         this.playPauseBtn.classList.remove('playing');
-        this.composingStatusDisplay.textContent = '状态: 已停止';
+        this.composingStatusDisplay.textContent = 'Status: Stopped';
         this.updateRegionIndicator(null);
-        this.currentMoodDisplay.textContent = '当前情绪: 等待探索';
+        this.currentMoodDisplay.textContent = 'Current mood: Awaiting exploration';
 
         console.log('⏹️ 停止探索 + 录音');
     }
@@ -507,7 +511,7 @@ class EmotionCanvasApp {
         this.audioChunks = [];
         this.recorder.start();
         this.isRecording = true;
-        this.recordingStatusDisplay.textContent = '录音: 进行中';
+        this.recordingStatusDisplay.textContent = 'Recording: Recording';
         this.saveBtn.disabled = true;
 
         console.log('🎙️ 自动开始录音');
@@ -517,7 +521,7 @@ class EmotionCanvasApp {
         if (this.recorder && this.isRecording) {
             this.recorder.stop();
             this.isRecording = false;
-            this.recordingStatusDisplay.textContent = '录音: 已完成';
+            this.recordingStatusDisplay.textContent = 'Recording: Stopped';
             console.log('⏹️ 自动停止录音');
         }
     }
@@ -546,7 +550,7 @@ class EmotionCanvasApp {
 
     handleMouseLeave() {
         this.updateRegionIndicator(null);
-        this.currentMoodDisplay.textContent = '当前情绪: 等待探索';
+        this.currentMoodDisplay.textContent = 'Current mood: Awaiting exploration';
     }
 
     createHighlight(x, y) {
@@ -564,6 +568,29 @@ class EmotionCanvasApp {
         highlight.style.left = `${x * this.cellSize}px`;
         highlight.style.top = `${y * this.cellSize}px`;
         highlight.style.opacity = '1';
+
+        // Special layered effect for happy
+        if (this.currentMood === 'happy') {
+            const baseImg = document.createElement('img');
+            baseImg.src = './assets/grid_happy.png';
+            baseImg.alt = 'happy grid base';
+            baseImg.className = 'happy-base';
+            const overlayImg = document.createElement('img');
+            overlayImg.src = './assets/grid_happy_ex.png';
+            overlayImg.alt = 'happy grid overlay';
+            overlayImg.className = 'happy-overlay';
+
+            highlight.appendChild(baseImg);
+            highlight.appendChild(overlayImg);
+
+            setTimeout(() => {
+                baseImg.style.opacity = '0';
+            }, 100);
+
+            setTimeout(() => {
+                overlayImg.classList.add('dissolve');
+            }, 700);
+        }
 
         document.querySelector('.canvas-container').appendChild(highlight);
 
@@ -588,7 +615,7 @@ class EmotionCanvasApp {
         if (!scale || !scale.notes) return;
 
         this.stepCounter++;
-        this.stepCounterDisplay.textContent = `音符: ${this.stepCounter}`;
+        this.stepCounterDisplay.textContent = `Notes: ${this.stepCounter}`;
 
         if (this.stepCounter % cfg.step === 0) {
             const mainPitch = this.getHarmonicPitch(x, y, scale);
@@ -763,3 +790,17 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('应用启动失败，请刷新页面重试');
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
