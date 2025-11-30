@@ -484,15 +484,15 @@ python>=3.8
 
     def generate_all(self):
         """生成所有文件"""
-        print("🎨 开始生成前端文件...")
-        self.generate_html()
-        self.generate_css()
-        self.generate_requirements()
+        # print("🎨 开始生成前端文件...")
+        # self.generate_html()
+        # self.generate_css()
+        # self.generate_requirements()
         print("🎉 所有前端文件生成完成！")
         print("📁 文件保存在:", self.output_dir.absolute())
         print("\n🚀 使用方法:")
         print("1. 运行: python -m http.server 3000")
-        print("2. 访问: http://localhost:3000")
+        print("2. 访问: http://192.168.124.17:8000/")
         print("3. 点击'开始探索'（会自动请求屏幕录制权限）")
         print("4. 弹性拖动中间的头像（有范围限制）")
         print("5. 在对角线四个区域移动鼠标体验不同情绪音乐:")
