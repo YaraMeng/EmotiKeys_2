@@ -13,6 +13,9 @@ class EmotionCanvasApp {
         this.playPauseBtn = document.getElementById('playPauseBtn');
         this.saveBtn = document.getElementById('saveBtn');
         this.audioPlayer = document.getElementById('audioPlayer');
+        this.infoDrawer = document.querySelector('.info-drawer');
+        this.infoPull = document.querySelector('.info-pull');
+        this.infoHand = document.querySelector('.info-hand');
         
         // 应用状态
         this.currentMood = null;
@@ -26,6 +29,8 @@ class EmotionCanvasApp {
         this.recorder = null;
         this.audioChunks = [];
         this.recordedAudio = null;
+        this.drawerTimer = null;
+        this.drawerIsOpen = false;
         
         // avatar assets
         this.avatarFaces = {
@@ -208,6 +213,7 @@ class EmotionCanvasApp {
     async init() {
         await this.initBackend();
         this.setupEventListeners();
+        this.setupDrawerInteraction();
         this.resizeCanvas();
         this.drawGrid();
         
@@ -464,6 +470,9 @@ class EmotionCanvasApp {
 
     async toggleComposing() {
         if (!this.isComposing) {
+            if (this.drawerIsOpen && typeof this.closeDrawer === 'function') {
+                this.closeDrawer();
+            }
             await this.startComposing();
         } else {
             this.stopComposing();
@@ -767,8 +776,16 @@ class EmotionCanvasApp {
     }
     
     resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        // 固定画布尺寸为容器尺寸，保持与背景网格对齐
+        const rect = this.canvasContainer?.getBoundingClientRect();
+        if (rect) {
+            this.canvas.width = rect.width;
+            this.canvas.height = rect.height;
+        } else {
+            // fallback 固定为设计稿尺寸
+            this.canvas.width = 1584;
+            this.canvas.height = 864;
+        }
     }
 
     // 把客户端坐标映射到设计/画布坐标，兼容 head08 缩放 (window.__HK_SCALE)
@@ -808,6 +825,110 @@ class EmotionCanvasApp {
             this.ctx.moveTo(0, y * cellHeight);
             this.ctx.lineTo(this.canvas.width, y * cellHeight);
             this.ctx.stroke();
+        }
+    }
+
+    setupDrawerInteraction() {
+        const dragTargets = [this.infoHand].filter(Boolean);
+        if (!this.infoDrawer || dragTargets.length === 0) return;
+
+        const handImg = this.infoHand;
+        const originalHandSrc = handImg ? handImg.src : null;
+        const openedHandSrc = './assets/hand02.png';
+        const originalPullSrc = this.infoPull ? this.infoPull.src : null;
+        const openedPullSrc = './assets/close.png';
+        const closeDrawer = () => {
+            if (!this.drawerIsOpen) return;
+            this.drawerIsOpen = false;
+            this.infoDrawer.classList.remove('open');
+            if (handImg) {
+                handImg.src = originalHandSrc || handImg.src;
+                handImg.style.left = '1512px';
+                handImg.style.top = '403px';
+                handImg.style.transform = '';
+            }
+            if (this.infoPull) this.infoPull.src = originalPullSrc || this.infoPull.src;
+        };
+        this.closeDrawer = closeDrawer;
+
+        dragTargets.forEach(el => {
+            let isDown = false;
+            let startX = 0;
+            let startY = 0;
+            let offsetX = 0;
+            let offsetY = 0;
+            let startTime = 0;
+
+            const onMove = (e) => {
+                if (!isDown || this.drawerIsOpen) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                let dx = clientX - startX;
+                let dy = clientY - startY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 85) {
+                    const scale = 85 / dist;
+                    dx *= scale;
+                    dy *= scale;
+                }
+                offsetX = dx;
+                offsetY = dy;
+                // 应用偏移到手
+                if (handImg) handImg.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                const elapsed = Date.now() - startTime;
+                if (elapsed >= 1000) {
+                    openDrawer();
+                    endDrag();
+                }
+            };
+
+            const endDrag = () => {
+                isDown = false;
+                window.removeEventListener('mousemove', onMove);
+                window.removeEventListener('touchmove', onMove);
+                window.removeEventListener('mouseup', endDrag);
+                window.removeEventListener('touchend', endDrag);
+                if (!this.drawerIsOpen) {
+                    if (handImg) handImg.style.transform = '';
+                }
+            };
+
+            const openDrawer = () => {
+                this.drawerIsOpen = true;
+                this.infoDrawer.classList.add('open');
+                if (handImg) {
+                    handImg.src = openedHandSrc;
+                    handImg.style.transform = '';
+                }
+                if (this.infoPull) this.infoPull.src = openedPullSrc;
+            };
+
+            el.addEventListener('mousedown', (e) => {
+                if (this.drawerIsOpen) return;
+                isDown = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startTime = Date.now();
+                window.addEventListener('mousemove', onMove);
+                window.addEventListener('mouseup', endDrag);
+            });
+
+            el.addEventListener('touchstart', (e) => {
+                if (this.drawerIsOpen) return;
+                isDown = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                startTime = Date.now();
+                window.addEventListener('touchmove', onMove, { passive: false });
+                window.addEventListener('touchend', endDrag);
+            });
+        });
+
+        // 点击 close 收起
+        if (this.infoPull) {
+            this.infoPull.addEventListener('click', () => {
+                closeDrawer();
+            });
         }
     }
 }
