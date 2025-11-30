@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'DianDianPixel', 'Arial', sans-serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: white;
     min-height: 100vh;
@@ -199,6 +199,12 @@ body {
     100% { transform: rotate(4deg) translate(-2px, 1px); }
 }
 
+
+@keyframes handSwing {
+    0% { transform: rotate(-10deg); }
+    100% { transform: rotate(10deg); }
+}
+
 /* 画布容器 */
 .canvas-container {
     position: absolute;
@@ -296,6 +302,14 @@ body {
     animation: overlayDissolve 0.8s ease-out forwards;
 }
 
+@font-face {
+    font-family: 'DianDianPixel';
+    src: url('./assets/fonts/dian-dian-pixel-square.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 @keyframes overlayDissolve {
     0% { transform: scale(1); opacity: 1; }
     60% { transform: scale(0.8); opacity: 0.8; }
@@ -379,6 +393,87 @@ body {
 .status span {
     font-size: 14px;
     font-weight: 500;
+    color: #00FF00;
+    font-family: 'DianDianPixel', 'Arial', sans-serif;
+}
+
+/* 左侧说明抽屉初始布局 */
+.info-drawer {
+    position: absolute;
+    inset: 0;
+    z-index: 120;
+    pointer-events: none;
+    transition: transform 0.5s ease;
+}
+
+.info-drawer img {
+    position: absolute;
+    user-select: none;
+}
+
+.info-pull {
+    left: 1424px;
+    top: 413px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.info-hand {
+    left: 1512px;
+    top: 403px;
+    pointer-events: auto;
+    animation: handPoke 0.5s ease-in-out infinite alternate;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.info-panel {
+    left: 1573px;
+    top: 276px;
+    pointer-events: auto;
+}
+
+.info-eyes {
+    position: absolute;
+    left: 1650px;
+    top: 233px;
+    display: flex;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.info-eyes .eye {
+    position: relative;
+    pointer-events: none;
+    animation: eyeSpin 3s linear infinite;
+}
+
+.info-drawer.open .info-eyes .eye {
+    animation: eyeSpin 3s linear infinite;
+}
+
+.info-drawer.open {
+    transform: translateX(-230px);
+}
+
+.info-drawer.open .info-hand {
+    animation: handSwing 0.5s ease-in-out infinite alternate;
+    left: 1512px;
+    top: 403px;
+}
+
+.info-drawer.open .info-pull {
+    cursor: pointer;
+}
+
+@keyframes handPoke {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-7px, 0); }
+}
+
+@keyframes eyeSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
 }
 
 /* 保存动画 */

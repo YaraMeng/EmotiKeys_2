@@ -16,6 +16,7 @@ class EmotionCanvasApp {
         this.infoDrawer = document.querySelector('.info-drawer');
         this.infoPull = document.querySelector('.info-pull');
         this.infoHand = document.querySelector('.info-hand');
+        this.container = document.querySelector('.container');
         
         // 应用状态
         this.currentMood = null;
@@ -31,10 +32,13 @@ class EmotionCanvasApp {
         this.recordedAudio = null;
         this.drawerTimer = null;
         this.drawerIsOpen = false;
+        this.avatarIdleTimer = null;
+        this.isAvatarHover = false;
         
         // avatar assets
         this.avatarFaces = {
             base: './assets/face.png',
+            baseAlt: './assets/face_2.png',
             happy: './assets/happy_face.png',
             calm: './assets/clam_face.png',
             tense: './assets/tense_face.png',
@@ -214,6 +218,7 @@ class EmotionCanvasApp {
         await this.initBackend();
         this.setupEventListeners();
         this.setupDrawerInteraction();
+        this.setupAvatarHover();
         this.resizeCanvas();
         this.drawGrid();
         
@@ -449,6 +454,12 @@ class EmotionCanvasApp {
         this.avatarContainer.className = 'avatar-container ' + mood;
         this.updateRegionIndicator(mood);
 
+        if (mood === null) {
+            this.startAvatarIdle();
+        } else {
+            this.stopAvatarIdle();
+        }
+
         console.log(`🎵 Entered mood region: ${mood}`);
     }
 
@@ -466,6 +477,11 @@ class EmotionCanvasApp {
     setAvatarFace(mood) {
         const faceSrc = this.avatarFaces[mood] || this.avatarFaces.base;
         this.avatar.src = faceSrc;
+        if (!mood) {
+            this.startAvatarIdle();
+        } else {
+            this.stopAvatarIdle();
+        }
     }
 
     async toggleComposing() {
@@ -568,6 +584,7 @@ class EmotionCanvasApp {
         this.currentMood = null;
         this.setAvatarFace(null);
         this.currentMoodDisplay.textContent = "Current mood: Awaiting exploration";
+        this.startAvatarIdle();
     }
 
     createHighlight(x, y) {
@@ -825,6 +842,48 @@ class EmotionCanvasApp {
             this.ctx.moveTo(0, y * cellHeight);
             this.ctx.lineTo(this.canvas.width, y * cellHeight);
             this.ctx.stroke();
+        }
+    }
+
+    setupAvatarHover() {
+        if (!this.avatarContainer) return;
+        this.avatarContainer.addEventListener('mouseenter', () => {
+            this.isAvatarHover = true;
+            this.stopAvatarIdle();
+            if (!this.currentMood) {
+                this.avatar.src = this.avatarFaces.base;
+            }
+        });
+        this.avatarContainer.addEventListener('mouseleave', () => {
+            this.isAvatarHover = false;
+            if (!this.currentMood) {
+                this.startAvatarIdle();
+            }
+        });
+        this.startAvatarIdle(500);
+    }
+
+    startAvatarIdle(interval = 500) {
+        if (this.currentMood || this.isAvatarHover) return;
+        if (this.avatarIdleTimer) return;
+        let toggle = false;
+        this.avatarIdleTimer = setInterval(() => {
+            if (this.currentMood || this.isAvatarHover) {
+                this.stopAvatarIdle();
+                return;
+            }
+            toggle = !toggle;
+            this.avatar.src = toggle ? this.avatarFaces.base : this.avatarFaces.baseAlt;
+        }, interval);
+    }
+
+    stopAvatarIdle() {
+        if (this.avatarIdleTimer) {
+            clearInterval(this.avatarIdleTimer);
+            this.avatarIdleTimer = null;
+        }
+        if (this.avatarFaces && this.avatar) {
+            this.avatar.src = this.avatarFaces[this.currentMood] || this.avatarFaces.base;
         }
     }
 
