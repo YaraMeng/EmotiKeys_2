@@ -20,6 +20,7 @@ class EmotionCanvasApp {
         this.audioPlayer = document.getElementById('audioPlayer');
 
         // 应用状态
+        this.isAudioReady = false; // <-- 新增状态
         this.currentMood = null;
         this.isComposing = false;
         this.isRecording = false;
@@ -213,9 +214,9 @@ class EmotionCanvasApp {
         this.setupEventListeners();
         this.drawGrid();
         
-        // 启动音频
-        await Tone.start();
-        console.log('🎵 音频上下文已启动');
+        // 不再在这里启动音频，将它移到第一次用户交互时
+        // await Tone.start(); 
+        console.log('🎵 音频上下文等待用户交互后启动');
     }
 
     async initBackend() {
@@ -524,6 +525,13 @@ class EmotionCanvasApp {
     }
 
     handleMouseMove(e) {
+        // 第一次交互时，启动音频
+        if (!this.isAudioReady) {
+            Tone.start();
+            this.isAudioReady = true;
+            console.log('🎵 音频上下文已通过用户交互启动');
+        }
+        
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -543,9 +551,9 @@ class EmotionCanvasApp {
 
             // 暂时先不需要发送数据到后端，等后续迭代
             // 探索模式：仅在 isComposing 为 true 时发送数据
-            if (this.isComposing) {
-                this.sendCellToBackend(cellX, cellY);
-            }
+            // if (this.isComposing) {
+            //     this.sendCellToBackend(cellX, cellY);
+            // }
         }
     }
 
@@ -587,11 +595,13 @@ class EmotionCanvasApp {
 
     async triggerNote(x, y) {
         // 允许在预览模式中播放（不依赖于 isComposing）
-        if (!this.moodConfig[this.currentMood]) return;
+        if (!this.moodConfig[this.currentMood]) 
+            return;
 
         const cfg = this.moodConfig[this.currentMood];
         const scale = this.scales[this.currentMood];
-        if (!scale || !scale.notes) return;
+        if (!scale || !scale.notes) 
+            return;
 
         this.stepCounter++;
         this.stepCounterDisplay.textContent = `音符: ${this.stepCounter}`;
