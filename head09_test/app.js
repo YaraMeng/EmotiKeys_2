@@ -1,7 +1,6 @@
 // 前端应用主逻辑 - 对角线四分区版
 // 后端地址配置 - 将请求发送到远端后端
-// HERE IS TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-const API_BASE = 'http://192.168.124.17:8000'; // <-- 替换为你的后端地址
+const API_BASE = ''; // <-- 已修改：现在API请求将发送到当前服务器
 function apiFetch(path, options = {}) {
     return fetch(`${API_BASE}${path}`, options);
 }
