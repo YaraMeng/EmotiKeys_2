@@ -1,0 +1,61 @@
+diff --git a/head09_test/app.js b/head09_test/app.js
+index 7856160..6645408 100644
+--- a/head09_test/app.js
++++ b/head09_test/app.js
+@@ -564,16 +564,24 @@ class EmotionCanvasApp {
+         highlight.style.top = `${y * this.cellSize}px`;
+         highlight.style.opacity = '1';
+ 
+-        // Special layered effect for happy
+-        if (this.currentMood === 'happy') {
++        // Layered effect per mood (base + overlay)
++        const moodLayers = {
++            happy: { base: './assets/grid_happy.png', overlay: './assets/grid_happy_ex.png' },
++            calm: { base: './assets/grid_clam.png', overlay: './assets/grid_clam_ex.png' },
++            tense: { base: './assets/grid_tense.png', overlay: './assets/grid_tense_ex.png' },
++            sad: { base: './assets/grid_sad.png', overlay: './assets/grid_sad_ex.png' }
++        };
++
++        const layers = moodLayers[this.currentMood];
++        if (layers) {
+             const baseImg = document.createElement('img');
+-            baseImg.src = './assets/grid_happy.png';
+-            baseImg.alt = 'happy grid base';
+-            baseImg.className = 'happy-base';
++            baseImg.src = layers.base;
++            baseImg.alt = `${this.currentMood} grid base`;
++            baseImg.className = 'layer-base';
+             const overlayImg = document.createElement('img');
+-            overlayImg.src = './assets/grid_happy_ex.png';
+-            overlayImg.alt = 'happy grid overlay';
+-            overlayImg.className = 'happy-overlay';
++            overlayImg.src = layers.overlay;
++            overlayImg.alt = `${this.currentMood} grid overlay`;
++            overlayImg.className = 'layer-overlay';
+ 
+             highlight.appendChild(baseImg);
+             highlight.appendChild(overlayImg);
+diff --git a/head09_test/styles.css b/head09_test/styles.css
+index 729debb..a49d51a 100644
+--- a/head09_test/styles.css
++++ b/head09_test/styles.css
+@@ -237,11 +237,6 @@ body {
+     transition: opacity 1.5s ease-out;
+ }
+ 
+-.grid-highlight.happy {
+-    background: none;
+-    overflow: hidden;
+-}
+-
+ .grid-highlight img {
+     position: absolute;
+     inset: 0;
+@@ -290,6 +285,7 @@ body {
+ .grid-highlight.sad {
+     background: none;
+     box-shadow: none;
++    overflow: hidden;
+ }
+ 
+ /* 控件 */
