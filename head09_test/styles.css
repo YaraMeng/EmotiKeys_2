@@ -17,14 +17,17 @@ body {
 }
 
 .container {
-    position: relative;
-    width: 1584px;
-    height: 864px;
-    margin: 20px auto;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    /* full-bleed container that covers the viewport */
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    border: none;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: none;
+    z-index: 0;
 }
 
 /* 情绪区域指示器 */
@@ -536,5 +539,10 @@ body {
 
 .container {
     animation: fadeIn 0.8s ease;
+}
+
+/* Ensure full-bleed container is not scaled by media queries or animations. */
+.container {
+    transform: none !important;
 }
 
