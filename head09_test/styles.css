@@ -57,39 +57,39 @@ body {
 }
 
 .happy-region {
-    left: 704px;
-    top: 188px;
+    left: 44.4%;
+    top: 21.8%;
 }
 .happy-region.active {
-    left: 643px;
-    top: 169px;
+    left: 40.6%;
+    top: 19.6%;
 }
 
 .calm-region {
-    left: 297px;
-    top: 398px;
+    left: 18.8%;
+    top: 46.1%;
 }
 .calm-region.active {
-    left: 229px;
-    top: 362px;
+    left: 14.5%;
+    top: 41.9%;
 }
 
 .tense-region {
-    left: 1144px;
-    top: 380px;
+    right: 18.8%;
+    top: 44.0%;
 }
 .tense-region.active {
-    left: 1199px;
-    top: 360px;
+    right: 14.5%;
+    top: 41.7%;
 }
 
 .sad-region {
-    left: 715px;
-    top: 558px;
+    left: 45.1%;
+    top: 64.6%;
 }
 .sad-region.active {
-    left: 649px;
-    top: 541px;
+    left: 41.0%;
+    top: 62.6%;
 }
 
 @keyframes popIn {
@@ -329,8 +329,9 @@ body {
 
 .control-btn {
     position: absolute;
-    width: 144px;
-    height: 48px;
+    /* responsive size: scale with viewport but clamp to design size */
+    width: min(9vw, 144px);
+    height: min(5.6vh, 48px);
     padding: 0;
     background: transparent;
     border: none;
@@ -345,8 +346,9 @@ body {
 }
 
 #playPauseBtn {
-    left: 632px;
-    top: 713px;
+    left: 45%;
+    top: 82.6%;
+    transform: translate(-50%, -50%);
     bottom: auto;
     background-image: url('./assets/start.png');
 }
@@ -356,18 +358,19 @@ body {
 }
 
 #saveBtn {
-    left: 820px;
-    top: 713px;
+    right: 35%;
+    top: 82.6%;
+    transform: translate(-50%, -50%);
     bottom: auto;
     background-image: url('./assets/save.png');
 }
 
 .control-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
+    transform: translate(-50%, -50%) translateY(-2px);
 }
 
 .control-btn:active {
-    transform: translateY(1px);
+    transform: translate(-50%, -50%) translateY(1px);
 }
 
 .control-btn:disabled {
@@ -415,15 +418,15 @@ body {
 }
 
 .info-pull {
-    left: 1424px;
-    top: 413px;
+    right: 5%;
+    top: 47.8%;
     pointer-events: auto;
     cursor: pointer;
 }
 
 .info-hand {
-    left: 1512px;
-    top: 403px;
+    right: 0.02%;
+    top: 46.6%;
     pointer-events: auto;
     animation: handPoke 0.5s ease-in-out infinite alternate;
     cursor: pointer;
@@ -431,15 +434,15 @@ body {
 }
 
 .info-panel {
-    left: 1573px;
-    top: 276px;
+    left: 99%;
+    top: 31.9%;
     pointer-events: auto;
 }
 
 .info-eyes {
     position: absolute;
-    left: 1650px;
-    top: 233px;
+    left: 104.2%;
+    top: 27.0%;
     display: flex;
     gap: 6px;
     pointer-events: none;
@@ -461,8 +464,8 @@ body {
 
 .info-drawer.open .info-hand {
     animation: handSwing 0.5s ease-in-out infinite alternate;
-    left: 1512px;
-    top: 403px;
+    right: 0.5%;
+    top: 46.6%;
 }
 
 .info-drawer.open .info-pull {
