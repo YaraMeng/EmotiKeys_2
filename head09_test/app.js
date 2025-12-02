@@ -1,4 +1,9 @@
-// 前端应用主逻辑 - 修复四个区域划分
+// 前端应用主逻辑 - 对角线四分区版
+// 后端地址配置 - 将请求发送到远端后端
+const API_BASE = ''; // <-- 已修改：现在API请求将发送到当前服务器
+function apiFetch(path, options = {}) {
+    return fetch(`${API_BASE}${path}`, options);
+}
 class EmotionCanvasApp {
     constructor() {
         this.canvas = document.getElementById('gridCanvas');
@@ -22,6 +27,7 @@ class EmotionCanvasApp {
         this.currentMood = null;
         this.isComposing = false;
         this.isRecording = false;
+        this.isAudioReady = false; 
         this.stepCounter = 0;
         this.sessionId = null;
         this.moodConfig = {};
@@ -222,24 +228,24 @@ class EmotionCanvasApp {
         this.resizeCanvas();
         this.drawGrid();
         
-        // 启动音频
-        await Tone.start();
-        console.log('🎵 音频上下文已启动');
+        // 不再在这里启动音频，将它移到第一次用户交互时
+        // await Tone.start(); 
+        console.log('🎵 音频上下文等待用户交互后启动');
     }
     
     async initBackend() {
         try {
-            const moodsResponse = await fetch('/moods');
+            const moodsResponse = await apiFetch('/moods');
             this.moodConfig = await moodsResponse.json();
             console.log('情绪配置:', this.moodConfig);
             
             for (const mood in this.moodConfig) {
                 const scaleName = this.moodConfig[mood].scale;
-                const scaleResponse = await fetch(`/scale?name=${scaleName}`);
+                const scaleResponse = await apiFetch(`/scale?name=${scaleName}`);
                 this.scales[mood] = await scaleResponse.json();
             }
-            
-            const sessionResponse = await fetch('/sessions', {
+
+            const sessionResponse = await apiFetch('/sessions', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -559,11 +565,15 @@ class EmotionCanvasApp {
     }
 
     handleMouseMove(e) {
-        if (!this.isComposing) return;
+       if (!this.isAudioReady) {
+            Tone.start();
+            this.isAudioReady = true;
+            console.log('🎵 音频上下文已通过用户交互启动');
+        }
         const p = this.mapClientToDesign(e.clientX, e.clientY);
         const x = p.x;
         const y = p.y;
-        
+
         const currentRegion = this.getCurrentRegion(x, y);
         if (currentRegion && currentRegion !== this.currentMood) {
             this.setMood(currentRegion);
@@ -573,9 +583,15 @@ class EmotionCanvasApp {
         const cellY = Math.floor(y / (this.canvas.height / this.gridHeight));
         
         if (cellX >= 0 && cellX < this.gridWidth && cellY >= 0 && cellY < this.gridHeight && this.currentMood) {
+            // 预览模式：总是显示高亮和播放声音
             this.createHighlight(cellX, cellY);
             this.triggerNote(cellX, cellY);
-            this.sendCellToBackend(cellX, cellY);
+
+            // 暂时先不需要发送数据到后端，等后续迭代
+            // 探索模式：仅在 isComposing 为 true 时发送数据
+            // if (this.isComposing) {
+            //     this.sendCellToBackend(cellX, cellY);
+            // }
         }
     }
     
@@ -593,7 +609,6 @@ class EmotionCanvasApp {
         if (!images) return;
 
         const cellKey = `${x},${y}`;
-        
         if (this.activeHighlights.has(cellKey)) {
             const existingHighlight = this.activeHighlights.get(cellKey);
             existingHighlight.remove();
@@ -609,7 +624,6 @@ class EmotionCanvasApp {
         highlight.style.height = `${cellHeight}px`;
         highlight.style.left = `${x * cellWidth}px`;
         highlight.style.top = `${y * cellHeight}px`;
-
         const baseImg = document.createElement('img');
         baseImg.className = 'base-layer';
         baseImg.src = images.base;
@@ -626,6 +640,7 @@ class EmotionCanvasApp {
 
         setTimeout(() => {
             baseImg.classList.add('fade');
+
         }, 100);
 
         setTimeout(() => {
@@ -643,13 +658,15 @@ class EmotionCanvasApp {
     }
     
     async triggerNote(x, y) {
-        if (!this.moodConfig[this.currentMood] || !this.isComposing) return;
-        
+        // 允许在预览模式中播放（不依赖于 isComposing）
+        if (!this.moodConfig[this.currentMood]) 
+            return;
+
         const cfg = this.moodConfig[this.currentMood];
         const scale = this.scales[this.currentMood];
-        
-        if (!scale || !scale.notes) return;
-        
+        if (!scale || !scale.notes) 
+            return;
+
         this.stepCounter++;
         this.stepCounterDisplay.textContent = `Notes: ${this.stepCounter}`;
         
@@ -732,8 +749,8 @@ class EmotionCanvasApp {
                 intensity: 1.0,
                 timestamp: new Date().toISOString()
             };
-            
-            await fetch(`/sessions/${this.sessionId}/cells`, {
+
+            await apiFetch(`/sessions/${this.sessionId}/cells`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cellData)
