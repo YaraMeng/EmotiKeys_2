@@ -22,8 +22,8 @@
         <!-- 中央头像 - 弹性拉动 -->
         <div class="avatar-container">
             <img id="avatar"
-                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiByeD0iNjAiIGZpbGw9IiM0RUE5RjEiLz4KPGNpcmNsZSBjeD0iNjAiIGN5PSI0MCIgcj0iMTUiIGZpbGw9IiNGRkYiLz4KPHBhdGggZD0iTTQ1IDgwIEEyMCAyMCA0IDAgMCA3NSA4MCIgc3Ryb2tlPSIjRkZGIiBzdHJva2Utd2lkdGg9IjQiLz4KPC9zdmc+"
-                 alt="头像" class="avatar">
+                 src="./assets/face.png"
+                 alt="avatar" class="avatar">
         </div>
 
         <!-- 网格画布 - 固定尺寸 -->
@@ -51,6 +51,17 @@
             <span id="recordingStatus">Recording: Not started</span>
         </div>
 
+        <!-- 左侧说明抽屉（初始仅布局，不含交互） -->
+        <div class="info-drawer">
+            <img class="info-pull" src="./assets/pullme.png" alt="Pull me">
+            <img class="info-hand" src="./assets/hand01.png" alt="Hand">
+            <img class="info-panel" src="./assets/canva.png" alt="Info panel">
+            <div class="info-eyes">
+                <img class="eye eye-left" src="./assets/eye1.png" alt="Eye 1">
+                <img class="eye eye-right" src="./assets/eye2.png" alt="Eye 2">
+            </div>
+        </div>
+
         <!-- 隐藏的音频播放器 -->
         <audio id="audioPlayer" controls style="display: none;"></audio>
     </div>
@@ -58,6 +69,9 @@
     <script src="app.js"></script>
 </body>
 </html>
+
+
+
 
 
 
