@@ -267,31 +267,31 @@ class EmotionCanvasApp {
         this.moodConfig = {
             happy: { 
                 bpm: 120, 
-                step: 1,
+                step: 2,
                 scale: "C_major", 
-                vel: [70, 85], 
-                legato: 0.7
+                vel: [60, 80], 
+                legato: 0.8
             },
             calm: { 
-                bpm: 80, 
-                step: 2,
+                bpm: 60, 
+                step: 4,
                 scale: "G_major", 
-                vel: [50, 65], 
-                legato: 1.2
+                vel: [45, 60], 
+                legato: 1.7
             },
             tense: { 
-                bpm: 100, 
+                bpm: 110, 
                 step: 1,
                 scale: "E_minor", 
-                vel: [60, 75], 
-                legato: 0.5
+                vel: [65, 85], 
+                legato: 0.25
             },
             sad: { 
-                bpm: 70, 
+                bpm: 65, 
                 step: 2,
                 scale: "A_minor", 
-                vel: [45, 60], 
-                legato: 1.0
+                vel: [40, 55], 
+                legato: 1.2
             }
         };
         
