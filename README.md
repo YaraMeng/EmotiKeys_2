@@ -13,7 +13,7 @@ EmotiKeys is an experimental web application that transforms a user's mouse move
 
 ## Demo
 
-Add a short demo GIF or an embedded video link here.
+https://youtu.be/pryeCQkJ-ns
 
 ## Music Interaction Flow
 
